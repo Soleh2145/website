@@ -14,7 +14,7 @@
         }
 
         body {
-            background-color: #050505;
+            background-color: #000;
             color: #fff;
             overflow: hidden;
             display: flex;
@@ -35,7 +35,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2560&auto=format&fit=crop');
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=2560&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -56,7 +56,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(5px);
         }
 
@@ -74,7 +74,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #050505;
+            background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -92,7 +92,7 @@
             height: 45px;
             border: 3px solid rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            border-top-color: #ffffff;
+            border-top-color: #00bfff;
             animation: spin 0.7s linear infinite;
         }
 
@@ -100,18 +100,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* CANVAS CACING 3D TUNNEL (SUPER RINGAN) */
-        #wormhole-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            cursor: pointer;
-        }
-
-        /* BACKGROUND UTAMA: VIDEO BERJALAN / PEMANDANGAN */
+        /* VIDEO BACKGROUND MOBIL BERJALAN */
         .video-container {
             position: fixed;
             top: 0;
@@ -119,7 +108,13 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            background: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2560&auto=format&fit=crop') no-repeat center center/cover;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .overlay {
@@ -128,7 +123,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.45);
+            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%);
             z-index: -1;
         }
 
@@ -139,12 +134,7 @@
             flex-direction: column;
             align-items: center;
             z-index: 5;
-            pointer-events: none; /* Klik tembus ke canvas cacing */
             animation: fadeIn 1.2s ease-in-out;
-        }
-
-        .sub-profile-box, .music-player-card, .social-icons a {
-            pointer-events: auto; /* Aktifkan klik kembali khusus menu interaktif */
         }
 
         @keyframes fadeIn {
@@ -177,7 +167,7 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(0, 191, 255, 0.2);
         }
 
         .status-dot {
@@ -187,7 +177,7 @@
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            border: 3.5px solid #050505;
+            border: 3.5px solid #000;
         }
 
         .status-dot.online { background-color: #23a55a; }
@@ -200,26 +190,26 @@
             font-weight: 700;
             letter-spacing: 0.5px;
             color: #fff;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 12px rgba(0, 191, 255, 0.4);
             animation: blueGlitch 2s ease-in-out infinite alternate;
         }
 
         @keyframes blueGlitch {
-            0% { text-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 2px rgba(0, 150, 255, 0.2); }
-            100% { text-shadow: 0 0 14px rgba(255,255,255,0.6), 0 0 8px rgba(0, 150, 255, 0.5); }
+            0% { text-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 4px rgba(0, 150, 255, 0.3); }
+            100% { text-shadow: 0 0 16px rgba(255,255,255,0.6), 0 0 12px rgba(0, 191, 255, 0.6); }
         }
 
         .sub-profile-box {
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(0, 191, 255, 0.15);
             padding: 10px 24px;
             border-radius: 30px;
             backdrop-filter: blur(10px);
             margin-top: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.6);
             min-width: 210px;
         }
 
@@ -244,27 +234,28 @@
         .music-player-card {
             display: flex;
             align-items: center;
-            background: rgba(18, 18, 18, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 10, 20, 0.75);
+            border: 1px solid rgba(0, 191, 255, 0.15);
             padding: 12px 18px;
             border-radius: 14px;
             backdrop-filter: blur(15px);
             width: 420px;
             max-width: 90vw;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
 
         .mp-cover {
             width: 45px;
             height: 45px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 191, 255, 0.1);
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 1.2rem;
-            color: #ccc;
+            color: #00bfff;
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.6);
             margin-right: 14px;
         }
 
@@ -305,7 +296,7 @@
         .mp-progress-fill {
             width: 0%;
             height: 100%;
-            background: #ffffff;
+            background: linear-gradient(90deg, #00bfff, #0055ff);
             border-radius: 2px;
             transition: width 0.1s linear;
         }
@@ -373,6 +364,35 @@
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.35);
         }
+
+        /* EFEK CACING PARTIKEL CSS (0% LAG - RINGAN BANGET) */
+        .worm-particle {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #00bfff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            box-shadow: 0 0 10px #00bfff, 0 0 20px #0055ff;
+            animation: moveWorm 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes moveWorm {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            50% {
+                /* Membuat rute meliuk seperti cacing */
+                transform: translate(var(--x1), var(--y1)) scale(0.8);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--x2), var(--y2)) scale(0);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -387,9 +407,10 @@
 
     <audio id="audio-player" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
 
-    <canvas id="wormhole-canvas"></canvas>
-
     <div class="video-container">
+        <video id="bg-video" loop muted playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-tunnel-of-futuristic-lights-at-night-42284-large.mp4" type="video/mp4">
+        </video>
         <div class="overlay"></div>
     </div>
 
@@ -465,6 +486,7 @@
         const currentTimeEl = document.getElementById("current-time");
         const durationEl = document.getElementById("duration");
         const audio = document.getElementById("audio-player");
+        const bgVideo = document.getElementById("bg-video");
 
         function formatTime(time) {
             if (isNaN(time)) return "0:00";
@@ -473,7 +495,7 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Sinkronisasi Bar Musik asli
+        // Sinkronisasi Progress Bar Audio
         audio.addEventListener('timeupdate', () => {
             const current = audio.currentTime;
             const total = audio.duration;
@@ -495,28 +517,31 @@
                     isPlaying = true;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     cdIcon.classList.add('fa-spin');
-                    cdIcon.style.animationDuration = "3s";
+                    bgVideo.play();
                 }).catch(e => console.log("Playback blocked"));
             } else {
                 audio.pause();
                 isPlaying = false;
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
                 cdIcon.classList.remove('fa-spin');
+                bgVideo.pause();
             }
         }
 
-        // EVENT KLIK MASUK UTAMA
+        // TRIGGER SAAT KLIK MASUK UTAMA
         entryBtn.addEventListener('click', () => {
             clickScreen.classList.add('fade-out');
             loadingScreen.classList.remove('hidden');
 
+            // Putar audio & video background barengan
             audio.volume = 1.0;
             audio.play().then(() => {
                 isPlaying = true;
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 cdIcon.classList.add('fa-spin');
-                cdIcon.style.animationDuration = "3s";
-            }).catch(err => console.log("Audio failed to start"));
+            }).catch(err => console.log("Audio failed"));
+
+            bgVideo.play().catch(err => console.log("Video failed"));
 
             setTimeout(() => {
                 clickScreen.remove();
@@ -534,7 +559,7 @@
             togglePlay();
         });
 
-        // Fetch Lanyard Discord
+        // Fetch Lanyard Discord Data
         function getDiscordData() {
             fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
                 .then(res => res.json())
@@ -588,88 +613,56 @@
 
 
         // ========================================================
-        //  ENGINE CACING 3D TUNNEL INTERAKTIF (RINGAN & BEBAS LAG)
+        //  EFEK CACING NEON INTERAKTIF BISA DIPENCET (ANTI LAG)
         // ========================================================
-        const canvas = document.getElementById('wormhole-canvas');
-        const ctx = canvas.getContext('2d');
+        function createWorm(e) {
+            // Abaikan klik jika mengenai area tombol interaktif
+            if (e.target.closest('.music-player-card') || e.target.closest('.sub-profile-box') || e.target.closest('.social-icons') || e.target.closest('#entry-btn')) return;
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
-        let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
-        
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
+            if (!clientX || !clientY) return;
 
-        // BISA DIPENCET / DIKLIK: Mengubah koordinat target cacing secara instan begitu layar disentuh
-        window.addEventListener('mousemove', (e) => {
-            mouse.targetX = e.clientX;
-            mouse.targetY = e.clientY;
-        });
+            // Generate beberapa ruas partikel beruntun membentuk badan cacing
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.classList.add('worm-particle');
+                    
+                    // Posisi spawn awal tepat di titik jari pencet/klik
+                    particle.style.left = clientX + 'px';
+                    particle.style.top = clientY + 'px';
 
-        window.addEventListener('mousedown', (e) => {
-            if(e.target.closest('.music-player-card') || e.target.closest('.sub-profile-box') || e.target.closest('.social-icons') || e.target.closest('#entry-btn')) return;
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
+                    // Berikan rute liukan acak zigzag cacing lewat CSS Variables
+                    const x1 = (Math.random() - 0.5) * 120 + 'px';
+                    const y1 = (Math.random() - 0.5) * 120 + 'px';
+                    const x2 = (Math.random() - 0.5) * 240 + 'px';
+                    const y2 = (Math.random() - 0.5) * 240 + 'px';
 
-        window.addEventListener('touchstart', (e) => {
-            if(e.target.closest('.music-player-card') || e.target.closest('.sub-profile-box') || e.target.closest('.social-icons') || e.target.closest('#entry-btn')) return;
-            let touch = e.touches[0];
-            mouse.x = touch.clientX;
-            mouse.y = touch.clientY;
-            mouse.targetX = touch.clientX;
-            mouse.targetY = touch.clientY;
-        });
+                    particle.style.setProperty('--x1', x1);
+                    particle.style.setProperty('--y1', y1);
+                    particle.style.setProperty('--x2', x2);
+                    particle.style.setProperty('--y2', y2);
 
-        const ringCount = 35; // Dikurangi sedikit agar beban render sangan enteng di HP/PC kentang
-        const rings = [];
+                    // Variasi spektrum warna neon agar estetik
+                    const hue = Math.random() * 40 + 190;
+                    particle.style.background = `hsl(${hue}, 100%, 60%)`;
+                    particle.style.boxShadow = `0 0 10px hsl(${hue}, 100%, 60%), 0 0 20px hsl(${hue}, 100%, 40%)`;
 
-        for (let i = 0; i < ringCount; i++) {
-            rings.push({
-                x: width / 2,
-                y: height / 2,
-                radius: 0,
-                colorHue: (i / ringCount) * 40 + 200 // Warna cyan biru neon estetik
-            });
-        }
+                    document.body.appendChild(particle);
 
-        function animateWormhole() {
-            // Clear rect transparan agar video background di belakangnya kelihatan berjalan jernih
-            ctx.clearRect(0, 0, width, height);
-
-            // Lerp pergerakan liukan cacing biar smooth
-            mouse.x += (mouse.targetX - mouse.x) * 0.08;
-            mouse.y += (mouse.targetY - mouse.y) * 0.08;
-
-            for (let i = ringCount - 1; i >= 0; i--) {
-                let ring = rings[i];
-                let z = (i / ringCount); 
-                let targetRadius = (1 - z) * (Math.max(width, height) * 0.55);
-                
-                let targetX = mouse.x * z + (width / 2) * (1 - z);
-                let targetY = mouse.y * z + (height / 2) * (1 - z);
-                
-                ring.x += (targetX - ring.x) * 0.25;
-                ring.y += (targetY - ring.y) * 0.25;
-                ring.radius = targetRadius;
-
-                ctx.beginPath();
-                ctx.arc(ring.x, ring.y, ring.radius, 0, Math.PI * 2);
-                
-                // Opacity tipis transparan (Tanpa efek bayangan shadowBlur bikin lag)
-                let alpha = (1 - z) * 0.35;
-                ctx.strokeStyle = `hsla(${ring.colorHue}, 85%, 65%, ${alpha})`;
-                ctx.lineWidth = (1 - z) * 3 + 0.5;
-                ctx.stroke();
+                    // Hapus otomatis dari DOM setelah animasi selesai biar RAM bersih
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 1200);
+                }, i * 45); // Delay antar segmen badan cacing agar meliuk rapi
             }
-
-            requestAnimationFrame(animateWormhole);
         }
-        
-        animateWormhole();
+
+        // Jalankan efek saat di-klik (PC) ataupun di-pencet (Android/iOS)
+        window.addEventListener('mousedown', createWorm);
+        window.addEventListener('touchstart', createWorm);
     </script>
 </body>
 </html>
