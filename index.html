@@ -100,7 +100,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* BACKGROUND UTAMA: VIDEO MOBIL BERJALAN MALAM HARI */
+        /* BACKGROUND UTAMA: VIDEO MOBIL BERJALAN */
         .video-container {
             position: fixed;
             top: 0;
@@ -109,6 +109,7 @@
             height: 100%;
             z-index: -2;
             overflow: hidden;
+            background-color: #050505;
         }
 
         .video-container video {
@@ -123,7 +124,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+            background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%);
             z-index: -1;
         }
 
@@ -365,9 +366,7 @@
             color: rgba(255, 255, 255, 0.35);
         }
 
-        /* ========================================================
-           EFEK RINTIK HUJAN CSS (100% RINGAN - TIDAK BIKIN LAG)
-           ======================================================== */
+        /* EFEK RINTIK HUJAN CSS (SUPER RINGAN) */
         .rain-container {
             position: fixed;
             top: 0;
@@ -375,26 +374,22 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -1; /* Di depan video background, di belakang profil */
+            z-index: -1;
             overflow: hidden;
         }
 
         .drop {
             position: absolute;
             background: linear-gradient(transparent, rgba(255, 255, 255, 0.35));
-            width: 1px; /* Rintik air tipis jernih */
-            height: 70px;
+            width: 1px;
+            height: 75px;
             opacity: 0.6;
             animation: fall linear infinite;
         }
 
         @keyframes fall {
-            0% {
-                transform: translateY(-100px);
-            }
-            100% {
-                transform: translateY(100vh);
-            }
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100vh); }
         }
     </style>
 </head>
@@ -408,12 +403,13 @@
         <div class="spinner"></div>
     </div>
 
-    <audio id="audio-player" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+    <audio id="audio-player" src="https://pub-c5e31b5cdafb419a86a69d5d340a9ade.r2.dev/Bruno_Mars_When_I_Was_Your_Man.mp3" loop></audio>
 
     <div class="rain-container" id="rain-box"></div>
 
     <div class="video-container">
-        <video id="bg-video" loop muted playsinline>
+        <video id="bg-video" loop muted playsinline preload="auto">
+            <source src="https://v1.nitrocdn.com/dMpZJgEnuYgIKbQgYvNWeWvXgIByInQy/assets/images/optimized/rev-fa45b27/raw.githubusercontent.com/AnandChowdhary/looping-videos/main/videos/tunnel.mp4" type="video/mp4">
             <source src="https://assets.mixkit.co/videos/preview/mixkit-tunnel-of-futuristic-lights-at-night-42284-large.mp4" type="video/mp4">
         </video>
         <div class="overlay"></div>
@@ -522,7 +518,7 @@
                     isPlaying = true;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     cdIcon.classList.add('fa-spin');
-                    bgVideo.play();
+                    bgVideo.play().catch(() => {});
                 }).catch(e => console.log("Playback blocked"));
             } else {
                 audio.pause();
@@ -533,11 +529,12 @@
             }
         }
 
-        // EVENT KLIK MASUK UTAMA (Pemicu Audio & Video Berputar)
+        // EVENT KLIK MASUK UTAMA
         entryBtn.addEventListener('click', () => {
             clickScreen.classList.add('fade-out');
             loadingScreen.classList.remove('hidden');
 
+            // Force play audio dan video bersamaan demi menembus sandboxing browser
             audio.volume = 1.0;
             audio.play().then(() => {
                 isPlaying = true;
@@ -545,12 +542,21 @@
                 cdIcon.classList.add('fa-spin');
             }).catch(err => console.log("Audio play blocked"));
 
-            bgVideo.play().catch(err => console.log("Video play blocked"));
+            // Memaksa video berjalan
+            bgVideo.load();
+            let playVideoPromise = bgVideo.play();
+            if (playVideoPromise !== undefined) {
+                playVideoPromise.catch(error => {
+                    // Jika diblokir autoplay, coba jalankan lagi secara manual mute
+                    bgVideo.muted = true;
+                    bgVideo.play();
+                });
+            }
 
             setTimeout(() => {
                 clickScreen.remove();
                 getDiscordData();
-                makeItRain(); // Buat partikel hujan otomatis aktif
+                makeItRain();
                 
                 setTimeout(() => {
                     closeLoading();
@@ -616,26 +622,17 @@
         }
         setInterval(getDiscordData, 7000);
 
-        // =========================================================
-        // GENERATOR RINTIK HUJAN (SANGAT RINGAN & AMAN DARI LAG)
-        // =========================================================
+        // GENERATOR RINTIK HUJAN CSS
         function makeItRain() {
             const rainBox = document.getElementById('rain-box');
-            const dropCount = 60; // Jumlah rintik hujan seimbang agar estetik dan super enteng
+            const dropCount = 65;
 
             for (let i = 0; i < dropCount; i++) {
                 const drop = document.createElement('div');
                 drop.classList.add('drop');
-                
-                // Distribusi rintik hujan secara acak di lebar layar
                 drop.style.left = Math.random() * 100 + 'vw';
-                
-                // Kecepatan jatuh acak berkisar 0.6s sampai 1.2s agar terlihat natural
-                drop.style.animationDuration = (Math.random() * 0.6 + 0.6) + 's';
-                
-                // Delay acak agar rintik hujan turun bergantian tidak barengan
+                drop.style.animationDuration = (Math.random() * 0.5 + 0.6) + 's';
                 drop.style.animationDelay = (Math.random() * 2) + 's';
-                
                 rainBox.appendChild(drop);
             }
         }
