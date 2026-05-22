@@ -446,6 +446,9 @@
         let isPlaying = false;
         let progressInterval;
 
+        // VARIABEL KHUSUS CODES - PAKSA BYPASS CACHE BROWSER
+        const targetSongId = "kON9fn01rUQ"; 
+
         // Visitor Counter
         let views = localStorage.getItem('site_views');
         if (views === null) { views = 161; } else { views = parseInt(views) + 1; }
@@ -463,12 +466,12 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                videoId: 'mfsgeqFSHnQ',
+                videoId: targetSongId, 
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': 'mfsgeqFSHnQ',
+                    'playlist': targetSongId, 
                     'rel': 0,
                     'mute': 1 
                 },
@@ -480,7 +483,8 @@
         }
 
         function onPlayerReady(event) {
-            console.log("Player Siap.");
+            console.log("Player Siap Menggunakan Bruno Mars.");
+            player.loadVideoById({videoId: targetSongId}); // Force inject ulang ID video saat siap
             player.playVideo();
         }
 
