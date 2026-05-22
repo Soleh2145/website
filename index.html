@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Caldwell Website</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #050505;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* BACKGROUND HALAMAN KETIKA MASIH TOMBOL CLICK HERE */
+        #click-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2560&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.4s ease;
+        }
+
+        #entry-btn {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 14px 36px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        #entry-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transform: scale(1.02);
+        }
+
+        /* LOADING SCREEN TRANSISI */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        #loading-screen.fade-out, #click-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* CANVAS EFEK HUJAN & AIR */
+        #water-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* BACKGROUND UTAMA SETELAH MASUK */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2560&auto=format&fit=crop') no-repeat center center/cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.42);
+            z-index: -1;
+        }
+
+        /* PROFILE WRAPPER */
+        .profile-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar-main-wrapper {
+            margin-bottom: 15px;
+        }
+
+        .animate-float {
+            animation: floatAnimation 3.5s ease-in-out infinite;
+        }
+
+        @keyframes floatAnimation {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .avatar-main {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 3.5px solid #070707;
+        }
+
+        .status-dot.online { background-color: #23a55a; }
+        .status-dot.idle { background-color: #f0b232; }
+        .status-dot.dnd { background-color: #f23f43; }
+        .status-dot.offline { background-color: #80848e; }
+
+        .username-title {
+            font-size: 2.3rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #fff;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+            animation: blueGlitch 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes blueGlitch {
+            0% { text-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 2px rgba(0, 150, 255, 0.2); }
+            100% { text-shadow: 0 0 14px rgba(255,255,255,0.6), 0 0 8px rgba(0, 150, 255, 0.5); }
+        }
+
+        .sub-profile-box {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 24px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            margin-top: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+            min-width: 210px;
+        }
+
+        .sub-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .sub-username {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .status {
+            font-size: 0.75rem;
+            color: #9aa0a6;
+            margin-top: 2px;
+        }
+
+        /* MUSIC PLAYER CARD STYLE (SESUAI GAMBAR) */
+        .music-player-card {
+            display: flex;
+            align-items: center;
+            background: rgba(18, 18, 18, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 18px;
+            border-radius: 14px;
+            backdrop-filter: blur(15px);
+            width: 420px;
+            max-width: 90vw;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .mp-cover {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-right: 14px;
+        }
+
+        .mp-details {
+            flex-grow: 1;
+            text-align: left;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+
+        .mp-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mp-progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        .mp-progress-bar {
+            flex-grow: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mp-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 2px;
+            transition: width 0.3s linear;
+        }
+
+        .mp-controls {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mp-btn {
+            background: none;
+            border: none;
+            color: #b3b3b3;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.1s;
+        }
+
+        .mp-btn:hover {
+            color: #ffffff;
+        }
+
+        .mp-btn:active {
+            transform: scale(0.9);
+        }
+
+        .mp-btn.play-toggle {
+            font-size: 1.1rem;
+            color: #ffffff;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* SOSMED ICONS */
+        .social-icons {
+            display: flex;
+            gap: 22px;
+        }
+
+        .icon {
+            font-size: 1.65rem;
+            color: #ffffff;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.2s ease;
+        }
+
+        .icon:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+        .yt:hover { color: #ff0000; }
+        .ig:hover { color: #e1306c; }
+        .tt:hover { color: #ffffff; }
+        .dc:hover { color: #5865F2; }
+
+        .view-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.35);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="click-screen">
+        <button id="entry-btn">CLICK HERE</button>
+    </div>
+
+    <div id="loading-screen" class="hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <canvas id="water-canvas"></canvas>
+
+    <div id="youtube-player" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
+
+    <div class="video-container">
+        <div class="overlay"></div>
+    </div>
+
+    <div class="profile-container hidden" id="main-profile">
+        
+        <div class="avatar-main-wrapper animate-float">
+            <div class="avatar-container">
+                <img id="discord-avatar" src="avatar-main.png" alt="Pierre Demient" class="avatar-main">
+                <div id="discord-status-dot" class="status-dot offline"></div>
+            </div>
+        </div>
+
+        <h1 class="username-title">MuhamadSoleh</h1>
+
+        <div class="sub-profile-box">
+            <div class="sub-info">
+                <p id="discord-custom-status" class="sub-username">@MuhamadSoleh</p>
+                <p id="discord-activity" class="status">Offline</p>
+            </div>
+        </div>
+
+        <div class="music-player-card">
+            <div class="mp-cover">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="mp-details">
+                <div class="mp-title">Wiz Khalifa - See You Again</div>
+                <div class="mp-progress-wrapper">
+                    <span id="current-time">0:00</span>
+                    <div class="mp-progress-bar">
+                        <div class="mp-progress-fill" id="forward-fill"></div>
+                    </div>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+            <div class="mp-controls">
+                <button class="mp-btn"><i class="fas fa-backward"></i></button>
+                <button class="mp-btn play-toggle" id="play-btn"><i class="fas fa-pause"></i></button>
+                <button class="mp-btn"><i class="fas fa-forward"></i></button>
+            </div>
+        </div>
+
+        <div class="social-icons">
+            <a href="https://youtube.com" target="_blank" class="icon yt"><i class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com" target="_blank" class="icon ig"><i class="fab fa-instagram"></i></a>
+            <a href="https://tiktok.com" target="_blank" class="icon tt"><i class="fab fa-tiktok"></i></a>
+            <a href="https://discord.com" target="_blank" class="icon dc"><i class="fab fa-discord"></i></a>
+        </div>
+
+        <div class="view-counter">
+            <i class="far fa-eye"></i> <span id="count">0</span>
+        </div>
+
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+        const discordId = "1221615575789211669";
+        let player;
+        let isPlaying = false;
+        let progressInterval;
+
+        // Visitor Counter
+        let views = localStorage.getItem('site_views');
+        if (views === null) { views = 161; } else { views = parseInt(views) + 1; }
+        localStorage.setItem('site_views', views);
+        document.getElementById('count').innerText = views;
+
+        const clickScreen = document.getElementById('click-screen');
+        const loadingScreen = document.getElementById('loading-screen');
+        const mainProfile = document.getElementById('main-profile');
+        const entryBtn = document.getElementById('entry-btn');
+        const playBtn = document.getElementById("play-btn");
+        const progressFill = document.getElementById("forward-fill");
+        const currentTimeEl = document.getElementById("current-time");
+        const durationEl = document.getElementById("duration");
+
+        // Inisialisasi Player dengan ID Video baru
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                videoId: 'mfsgeqFSHnQ',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'mfsgeqFSHnQ',
+                    'rel': 0,
+                    'mute': 1 
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log("Player Siap.");
+            player.playVideo();
+        }
+
+        function formatTime(time) {
+            const mins = Math.floor(time / 60);
+            const secs = Math.floor(time % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Sinkronisasi Bar Musik
+        function updateProgressBar() {
+            if (player && typeof player.getCurrentTime === 'function') {
+                const current = player.getCurrentTime();
+                const total = player.getDuration();
+                
+                if (total > 0) {
+                    const percentage = (current / total) * 100;
+                    progressFill.style.width = percentage + "%";
+                    currentTimeEl.innerText = formatTime(current);
+                    durationEl.innerText = formatTime(total);
+                }
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                clearInterval(progressInterval);
+                progressInterval = setInterval(updateProgressBar, 1000);
+            } else {
+                isPlaying = false;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                clearInterval(progressInterval);
+            }
+        }
+
+        // AKSI PAS TOMBOL CLICK HERE DIKLIK - PAKSA PLAY DAN UNMUTE
+        entryBtn.addEventListener('click', () => {
+            clickScreen.classList.add('fade-out');
+            loadingScreen.classList.remove('hidden');
+
+            if (player && typeof player.playVideo === 'function') {
+                player.unMute(); 
+                player.setVolume(100);
+                player.playVideo();
+            }
+
+            setTimeout(() => {
+                clickScreen.remove();
+                getDiscordData();
+                
+                setTimeout(() => {
+                    closeLoading();
+                    mainProfile.classList.remove('hidden'); 
+                }, 400);
+            }, 300);
+        });
+
+        // Toggle Manual Card Play/Pause
+        playBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); 
+            if (player && typeof player.getPlayerState === 'function') {
+                if (!isPlaying) {
+                    player.unMute();
+                    player.playVideo();
+                } else {
+                    player.pauseVideo();
+                }
+            }
+        });
+
+        // Fetch Lanyard Discord
+        function getDiscordData() {
+            fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
+                .then(res => res.json())
+                .then(response => {
+                    if (!response.success) return;
+                    const data = response.data;
+                    
+                    const avatarImg = document.getElementById('discord-avatar');
+                    if (data.discord_user.avatar) {
+                        avatarImg.src = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${data.discord_user.avatar}.png?size=256`;
+                    }
+
+                    const statusDot = document.getElementById('discord-status-dot');
+                    statusDot.className = `status-dot ${data.discord_status}`;
+
+                    const customStatusEl = document.getElementById('discord-custom-status');
+                    if (data.custom_status) {
+                        let statusText = "";
+                        if (data.custom_status.emoji) statusText += data.custom_status.emoji.name + " ";
+                        statusText += data.custom_status.text || "";
+                        customStatusEl.innerText = statusText || `@${data.discord_user.username}`;
+                    } else {
+                        customStatusEl.innerText = `@${data.discord_user.username}`;
+                    }
+
+                    const activityEl = document.getElementById('discord-activity');
+                    const gameActivity = data.activities.find(act => act.type === 0);
+                    const spotifyActivity = data.listening_to_spotify ? data.activities.find(act => act.name === "Spotify") : null;
+
+                    if (spotifyActivity) {
+                        activityEl.innerHTML = `<i class="fab fa-spotify" style="color: #1DB954;"></i> Listening to ${spotifyActivity.details}`;
+                    } else if (gameActivity) {
+                        activityEl.innerHTML = `<i class="fas fa-gamepad"></i> Playing ${gameActivity.name}`;
+                    } else {
+                        if (data.discord_status === "online") activityEl.innerText = "Active Now";
+                        else if (data.discord_status === "idle") activityEl.innerText = "Idle";
+                        else if (data.discord_status === "dnd") activityEl.innerText = "Do Not Disturb";
+                        else activityEl.innerText = "Offline";
+                    }
+                })
+                .catch(err => console.log("Lanyard error"));
+        }
+
+        function closeLoading() {
+            if (loadingScreen) {
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => loadingScreen.remove(), 300);
+            }
+        }
+
+        setInterval(getDiscordData, 7000);
+
+        // CANVAS ANIMASI AIR & BINTIK HUJAN
+        const canvas = document.getElementById('water-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = []; 
+        let raindrops = []; 
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createRaindrop() {
+            if (raindrops.length < 60) { 
+                raindrops.push({
+                    x: Math.random() * canvas.width,
+                    y: -10,
+                    length: Math.random() * 15 + 10, 
+                    speedY: Math.random() * 4 + 4,   
+                    opacity: Math.random() * 0.3 + 0.1 
+                });
+            }
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            if (particles.length < 30) { 
+                particles.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    size: Math.random() * 4 + 2,
+                    alpha: 0.6,
+                    speedY: Math.random() * 1 + 0.5
+                });
+            }
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            createRaindrop();
+            for (let i = 0; i < raindrops.length; i++) {
+                let r = raindrops[i];
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(174, 219, 255, ${r.opacity})`;
+                ctx.lineWidth = 1.5;
+                ctx.moveTo(r.x, r.y);
+                ctx.lineTo(r.x + (r.speedY * 0.1), r.y + r.length); 
+                ctx.stroke();
+                r.y += r.speedY; 
+                if (r.y > canvas.height) { raindrops.splice(i, 1); i--; }
+            }
+
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(174, 219, 255, ${p.alpha})`;
+                ctx.fill();
+                p.y += p.speedY;
+                p.alpha -= 0.015;
+                p.size += 0.1;
+                if (p.alpha <= 0) { particles.splice(i, 1); i--; }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
