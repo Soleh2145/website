@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pierre Demient</title>
+    <title>Michael Caldwell Website</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,28 +14,27 @@
         }
 
         body {
-            background-color: #000;
+            background-color: #050505;
             color: #fff;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            user-select: none;
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* GERBANG AWAL (CLICK HERE) */
+        /* BACKGROUND HALAMAN KETIKA MASIH TOMBOL CLICK HERE */
         #click-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=2560&auto=format&fit=crop');
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2560&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -56,7 +55,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(5px);
         }
 
@@ -67,14 +66,14 @@
             transform: scale(1.02);
         }
 
-        /* LOADING TRANSISI */
+        /* LOADING SCREEN TRANSISI */
         #loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
+            background-color: #050505;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -92,7 +91,7 @@
             height: 45px;
             border: 3px solid rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            border-top-color: #00bfff;
+            border-top-color: #ffffff;
             animation: spin 0.7s linear infinite;
         }
 
@@ -100,7 +99,18 @@
             to { transform: rotate(360deg); }
         }
 
-        /* BACKGROUND UTAMA: VIDEO MOBIL BERJALAN */
+        /* CANVAS EFEK HUJAN & AIR */
+        #water-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* BACKGROUND UTAMA SETELAH MASUK */
         .video-container {
             position: fixed;
             top: 0;
@@ -108,14 +118,7 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            overflow: hidden;
-            background-color: #050505;
-        }
-
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            background: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2560&auto=format&fit=crop') no-repeat center center/cover;
         }
 
         .overlay {
@@ -124,17 +127,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%);
+            background: rgba(0, 0, 0, 0.42);
             z-index: -1;
         }
 
-        /* PROFILE CONTENT CONTAINER */
+        /* PROFILE WRAPPER */
         .profile-container {
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 5;
+            z-index: 1;
             animation: fadeIn 1.2s ease-in-out;
         }
 
@@ -168,7 +171,6 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(0, 191, 255, 0.2);
         }
 
         .status-dot {
@@ -178,7 +180,7 @@
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            border: 3.5px solid #000;
+            border: 3.5px solid #070707;
         }
 
         .status-dot.online { background-color: #23a55a; }
@@ -191,26 +193,26 @@
             font-weight: 700;
             letter-spacing: 0.5px;
             color: #fff;
-            text-shadow: 0 0 12px rgba(0, 191, 255, 0.4);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
             animation: blueGlitch 2s ease-in-out infinite alternate;
         }
 
         @keyframes blueGlitch {
-            0% { text-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 4px rgba(0, 150, 255, 0.3); }
-            100% { text-shadow: 0 0 16px rgba(255,255,255,0.6), 0 0 12px rgba(0, 191, 255, 0.6); }
+            0% { text-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 2px rgba(0, 150, 255, 0.2); }
+            100% { text-shadow: 0 0 14px rgba(255,255,255,0.6), 0 0 8px rgba(0, 150, 255, 0.5); }
         }
 
         .sub-profile-box {
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.65);
-            border: 1px solid rgba(0, 191, 255, 0.15);
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 10px 24px;
             border-radius: 30px;
             backdrop-filter: blur(10px);
             margin-top: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.5);
             min-width: 210px;
         }
 
@@ -231,32 +233,31 @@
             margin-top: 2px;
         }
 
-        /* CUSTOM MUSIC PLAYER UI */
+        /* MUSIC PLAYER CARD STYLE */
         .music-player-card {
             display: flex;
             align-items: center;
-            background: rgba(10, 10, 20, 0.75);
-            border: 1px solid rgba(0, 191, 255, 0.15);
+            background: rgba(18, 18, 18, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 12px 18px;
             border-radius: 14px;
             backdrop-filter: blur(15px);
             width: 420px;
             max-width: 90vw;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .mp-cover {
             width: 45px;
             height: 45px;
-            background: rgba(0, 191, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 1.2rem;
-            color: #00bfff;
-            text-shadow: 0 0 8px rgba(0, 191, 255, 0.6);
+            color: #ccc;
             margin-right: 14px;
         }
 
@@ -297,9 +298,9 @@
         .mp-progress-fill {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #00bfff, #0055ff);
+            background: #ffffff;
             border-radius: 2px;
-            transition: width 0.1s linear;
+            transition: width 0.3s linear;
         }
 
         .mp-controls {
@@ -332,7 +333,7 @@
             text-align: center;
         }
 
-        /* MEDSOS ICONS */
+        /* SOSMED ICONS */
         .social-icons {
             display: flex;
             gap: 22px;
@@ -365,32 +366,6 @@
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.35);
         }
-
-        /* EFEK RINTIK HUJAN CSS (SUPER RINGAN) */
-        .rain-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .drop {
-            position: absolute;
-            background: linear-gradient(transparent, rgba(255, 255, 255, 0.35));
-            width: 1px;
-            height: 75px;
-            opacity: 0.6;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(-100px); }
-            100% { transform: translateY(100vh); }
-        }
     </style>
 </head>
 <body>
@@ -403,15 +378,11 @@
         <div class="spinner"></div>
     </div>
 
-    <audio id="audio-player" src="https://pub-c5e31b5cdafb419a86a69d5d340a9ade.r2.dev/Bruno_Mars_When_I_Was_Your_Man.mp3" loop></audio>
+    <canvas id="water-canvas"></canvas>
 
-    <div class="rain-container" id="rain-box"></div>
+    <div id="youtube-player" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
 
     <div class="video-container">
-        <video id="bg-video" loop muted playsinline preload="auto">
-            <source src="https://v1.nitrocdn.com/dMpZJgEnuYgIKbQgYvNWeWvXgIByInQy/assets/images/optimized/rev-fa45b27/raw.githubusercontent.com/AnandChowdhary/looping-videos/main/videos/tunnel.mp4" type="video/mp4">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-tunnel-of-futuristic-lights-at-night-42284-large.mp4" type="video/mp4">
-        </video>
         <div class="overlay"></div>
     </div>
 
@@ -424,18 +395,18 @@
             </div>
         </div>
 
-        <h1 class="username-title">Pierre Demient</h1>
+        <h1 class="username-title">MuhamadSoleh</h1>
 
         <div class="sub-profile-box">
             <div class="sub-info">
-                <p id="discord-custom-status" class="sub-username">@pierredemient</p>
+                <p id="discord-custom-status" class="sub-username">@MuhamadSoleh</p>
                 <p id="discord-activity" class="status">Offline</p>
             </div>
         </div>
 
         <div class="music-player-card">
             <div class="mp-cover">
-                <i id="cd-icon" class="fas fa-compact-disc"></i>
+                <i class="fas fa-music"></i>
             </div>
             <div class="mp-details">
                 <div class="mp-title">Bruno Mars - When I Was Your Man</div>
@@ -449,7 +420,7 @@
             </div>
             <div class="mp-controls">
                 <button class="mp-btn"><i class="fas fa-backward"></i></button>
-                <button class="mp-btn play-toggle" id="play-btn"><i class="fas fa-play"></i></button>
+                <button class="mp-btn play-toggle" id="play-btn"><i class="fas fa-pause"></i></button>
                 <button class="mp-btn"><i class="fas fa-forward"></i></button>
             </div>
         </div>
@@ -458,7 +429,7 @@
             <a href="https://youtube.com" target="_blank" class="icon yt"><i class="fab fa-youtube"></i></a>
             <a href="https://instagram.com" target="_blank" class="icon ig"><i class="fab fa-instagram"></i></a>
             <a href="https://tiktok.com" target="_blank" class="icon tt"><i class="fab fa-tiktok"></i></a>
-            <a href="https://discord.com" target="_blank" class="icon dc"><i class="fab fa-discord"></i></a>
+            <a href="https://discord.com/invite/D2w67EDBF" target="_blank" class="icon dc"><i class="fab fa-discord"></i></a>
         </div>
 
         <div class="view-counter">
@@ -467,11 +438,15 @@
 
     </div>
 
-    <script>
-        const discordId = "439281048593920102";
-        let isPlaying = false;
+    <script src="https://www.youtube.com/iframe_api"></script>
 
-        // Visitor Counter Engine
+    <script>
+        const discordId = "1221615575789211669";
+        let player;
+        let isPlaying = false;
+        let progressInterval;
+
+        // Visitor Counter
         let views = localStorage.getItem('site_views');
         if (views === null) { views = 161; } else { views = parseInt(views) + 1; }
         localStorage.setItem('site_views', views);
@@ -482,81 +457,82 @@
         const mainProfile = document.getElementById('main-profile');
         const entryBtn = document.getElementById('entry-btn');
         const playBtn = document.getElementById("play-btn");
-        const cdIcon = document.getElementById("cd-icon");
         const progressFill = document.getElementById("forward-fill");
         const currentTimeEl = document.getElementById("current-time");
         const durationEl = document.getElementById("duration");
-        const audio = document.getElementById("audio-player");
-        const bgVideo = document.getElementById("bg-video");
+
+        // FIX: Inisialisasi Player Menggunakan ID Video Bruno Mars yang benar
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                videoId: 'n7ETOxQ2KTE', // Menggunakan ID asli video 'When I Was Your Man'
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'n7ETOxQ2KTE',
+                    'rel': 0,
+                    'mute': 0 
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log("Player Siap.");
+            // Tidak langsung play di sini agar mematuhi aturan browser sebelum di-klik user
+        }
 
         function formatTime(time) {
-            if (isNaN(time)) return "0:00";
             const mins = Math.floor(time / 60);
             const secs = Math.floor(time % 60);
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Sinkronisasi Bar Musik asli
-        audio.addEventListener('timeupdate', () => {
-            const current = audio.currentTime;
-            const total = audio.duration;
-            if (total > 0) {
-                const percentage = (current / total) * 100;
-                progressFill.style.width = percentage + "%";
-                currentTimeEl.innerText = formatTime(current);
-                durationEl.innerText = formatTime(total);
-            }
-        });
-
-        audio.addEventListener('loadedmetadata', () => {
-            durationEl.innerText = formatTime(audio.duration);
-        });
-
-        function togglePlay() {
-            if (audio.paused) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                    cdIcon.classList.add('fa-spin');
-                    bgVideo.play().catch(() => {});
-                }).catch(e => console.log("Playback blocked"));
-            } else {
-                audio.pause();
-                isPlaying = false;
-                playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                cdIcon.classList.remove('fa-spin');
-                bgVideo.pause();
+        // Sinkronisasi Bar Musik
+        function updateProgressBar() {
+            if (player && typeof player.getCurrentTime === 'function') {
+                const current = player.getCurrentTime();
+                const total = player.getDuration();
+                
+                if (total > 0) {
+                    const percentage = (current / total) * 100;
+                    progressFill.style.width = percentage + "%";
+                    currentTimeEl.innerText = formatTime(current);
+                    durationEl.innerText = formatTime(total);
+                }
             }
         }
 
-        // EVENT KLIK MASUK UTAMA
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                clearInterval(progressInterval);
+                progressInterval = setInterval(updateProgressBar, 1000);
+            } else {
+                isPlaying = false;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                clearInterval(progressInterval);
+            }
+        }
+
+        // AKSI PAS TOMBOL CLICK HERE DIKLIK - PAKSA PLAY DAN UNMUTE
         entryBtn.addEventListener('click', () => {
             clickScreen.classList.add('fade-out');
             loadingScreen.classList.remove('hidden');
 
-            // Force play audio dan video bersamaan demi menembus sandboxing browser
-            audio.volume = 1.0;
-            audio.play().then(() => {
-                isPlaying = true;
-                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                cdIcon.classList.add('fa-spin');
-            }).catch(err => console.log("Audio play blocked"));
-
-            // Memaksa video berjalan
-            bgVideo.load();
-            let playVideoPromise = bgVideo.play();
-            if (playVideoPromise !== undefined) {
-                playVideoPromise.catch(error => {
-                    // Jika diblokir autoplay, coba jalankan lagi secara manual mute
-                    bgVideo.muted = true;
-                    bgVideo.play();
-                });
+            if (player && typeof player.playVideo === 'function') {
+                player.unMute(); 
+                player.setVolume(100);
+                player.playVideo();
             }
 
             setTimeout(() => {
                 clickScreen.remove();
                 getDiscordData();
-                makeItRain();
                 
                 setTimeout(() => {
                     closeLoading();
@@ -565,12 +541,20 @@
             }, 300);
         });
 
-        playBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlay();
+        // Toggle Manual Card Play/Pause
+        playBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); 
+            if (player && typeof player.getPlayerState === 'function') {
+                if (!isPlaying) {
+                    player.unMute();
+                    player.playVideo();
+                } else {
+                    player.pauseVideo();
+                }
+            }
         });
 
-        // Fetch Lanyard Data Discord Profile
+        // Fetch Lanyard Discord
         function getDiscordData() {
             fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
                 .then(res => res.json())
@@ -620,22 +604,76 @@
                 setTimeout(() => loadingScreen.remove(), 300);
             }
         }
+
         setInterval(getDiscordData, 7000);
 
-        // GENERATOR RINTIK HUJAN CSS
-        function makeItRain() {
-            const rainBox = document.getElementById('rain-box');
-            const dropCount = 65;
+        // CANVAS ANIMASI AIR & BINTIK HUJAN
+        const canvas = document.getElementById('water-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = []; 
+        let raindrops = []; 
 
-            for (let i = 0; i < dropCount; i++) {
-                const drop = document.createElement('div');
-                drop.classList.add('drop');
-                drop.style.left = Math.random() * 100 + 'vw';
-                drop.style.animationDuration = (Math.random() * 0.5 + 0.6) + 's';
-                drop.style.animationDelay = (Math.random() * 2) + 's';
-                rainBox.appendChild(drop);
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createRaindrop() {
+            if (raindrops.length < 60) { 
+                raindrops.push({
+                    x: Math.random() * canvas.width,
+                    y: -10,
+                    length: Math.random() * 15 + 10, 
+                    speedY: Math.random() * 4 + 4,   
+                    opacity: Math.random() * 0.3 + 0.1 
+                });
             }
         }
+
+        window.addEventListener('mousemove', (e) => {
+            if (particles.length < 30) { 
+                particles.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    size: Math.random() * 4 + 2,
+                    alpha: 0.6,
+                    speedY: Math.random() * 1 + 0.5
+                });
+            }
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            createRaindrop();
+            for (let i = 0; i < raindrops.length; i++) {
+                let r = raindrops[i];
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(174, 219, 255, ${r.opacity})`;
+                ctx.lineWidth = 1.5;
+                ctx.moveTo(r.x, r.y);
+                ctx.lineTo(r.x + (r.speedY * 0.1), r.y + r.length); 
+                ctx.stroke();
+                r.y += r.speedY; 
+                if (r.y > canvas.height) { raindrops.splice(i, 1); i--; }
+            }
+
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(174, 219, 255, ${p.alpha})`;
+                ctx.fill();
+                p.y += p.speedY;
+                p.alpha -= 0.015;
+                p.size += 0.1;
+                if (p.alpha <= 0) { particles.splice(i, 1); i--; }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
