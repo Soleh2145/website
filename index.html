@@ -233,7 +233,7 @@
             margin-top: 2px;
         }
 
-        /* MUSIC PLAYER CARD STYLE (SESUAI GAMBAR) */
+        /* MUSIC PLAYER CARD STYLE */
         .music-player-card {
             display: flex;
             align-items: center;
@@ -409,7 +409,7 @@
                 <i class="fas fa-music"></i>
             </div>
             <div class="mp-details">
-                <div class="mp-title">Wiz Khalifa - See You Again</div>
+                <div class="mp-title">Bruno Mars - When I Was Your Man</div>
                 <div class="mp-progress-wrapper">
                     <span id="current-time">0:00</span>
                     <div class="mp-progress-bar">
@@ -461,24 +461,25 @@
         const currentTimeEl = document.getElementById("current-time");
         const durationEl = document.getElementById("duration");
 
-        // Inisialisasi Player dengan ID Video baru
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('youtube-player', {
-            videoId: 'mfsgeqFSHnQ',
-            playerVars: {
-                'autoplay': 1,
-                'controls': 0,
-                'loop': 1,
-                'playlist': 'mfsgeqFSHnQ',
-                'rel': 0,
-                'mute': 0 
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
-    }
+        // FIX AUTO-PLAY POLICY: Awalnya di-mute dulu agar diterima browser
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                videoId: 'mfsgeqFSHnQ',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'mfsgeqFSHnQ',
+                    'rel': 0,
+                    'mute': 1 
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
         function onPlayerReady(event) {
             console.log("Player Siap.");
             player.playVideo();
@@ -518,7 +519,7 @@
             }
         }
 
-        // AKSI PAS TOMBOL CLICK HERE DIKLIK - PAKSA PLAY DAN UNMUTE
+        // FIX UTAMA DI SINI: Ketika klik, un-mute paksa melalui event interaksi fisik user
         entryBtn.addEventListener('click', () => {
             clickScreen.classList.add('fade-out');
             loadingScreen.classList.remove('hidden');
