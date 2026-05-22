@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Michael Caldwell Website</title>
+    <title>Pierre Demient</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -233,7 +233,7 @@
             margin-top: 2px;
         }
 
-        /* MUSIC PLAYER CARD STYLE (SESUAI GAMBAR) */
+        /* MUSIC PLAYER CARD STYLE */
         .music-player-card {
             display: flex;
             align-items: center;
@@ -395,11 +395,11 @@
             </div>
         </div>
 
-        <h1 class="username-title">MuhamadSoleh</h1>
+        <h1 class="username-title">Pierre Demient</h1>
 
         <div class="sub-profile-box">
             <div class="sub-info">
-                <p id="discord-custom-status" class="sub-username">@MuhamadSoleh</p>
+                <p id="discord-custom-status" class="sub-username">@pierredemient</p>
                 <p id="discord-activity" class="status">Offline</p>
             </div>
         </div>
@@ -409,7 +409,7 @@
                 <i class="fas fa-music"></i>
             </div>
             <div class="mp-details">
-                <div class="mp-title">Wiz Khalifa - See You Again</div>
+                <div class="mp-title" id="track-title">Bruno Mars - When I Was Your Man</div>
                 <div class="mp-progress-wrapper">
                     <span id="current-time">0:00</span>
                     <div class="mp-progress-bar">
@@ -429,7 +429,7 @@
             <a href="https://youtube.com" target="_blank" class="icon yt"><i class="fab fa-youtube"></i></a>
             <a href="https://instagram.com" target="_blank" class="icon ig"><i class="fab fa-instagram"></i></a>
             <a href="https://tiktok.com" target="_blank" class="icon tt"><i class="fab fa-tiktok"></i></a>
-            <a href="https://discord.com/invite/D2w67EDBF" target="_blank" class="icon dc"><i class="fab fa-discord"></i></a>
+            <a href="https://discord.com" target="_blank" class="icon dc"><i class="fab fa-discord"></i></a>
         </div>
 
         <div class="view-counter">
@@ -441,7 +441,7 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        const discordId = "1221615575789211669";
+        const discordId = "439281048593920102";
         let player;
         let isPlaying = false;
         let progressInterval;
@@ -460,18 +460,21 @@
         const progressFill = document.getElementById("forward-fill");
         const currentTimeEl = document.getElementById("current-time");
         const durationEl = document.getElementById("duration");
+        const trackTitleEl = document.getElementById("track-title");
 
-        // Inisialisasi Player dengan ID Video baru
+        // Inisialisasi Player dengan ID Video baru (kON9fn01rUQ)
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                videoId: 'RDN7ETOxQ2KTE',
+                videoId: 'kON9fn01rUQ',
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': 'N7ETOxQ2KTE',
+                    'playlist': 'kON9fn01rUQ',
                     'rel': 0,
-                    'mute': 0 
+                    'mute': 1,
+                    'enablejsapi': 1,
+                    'origin': window.location.origin
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -482,6 +485,9 @@
 
         function onPlayerReady(event) {
             console.log("Player Siap.");
+            if(player.getVideoData && player.getVideoData().title) {
+                trackTitleEl.innerText = player.getVideoData().title;
+            }
             player.playVideo();
         }
 
@@ -491,7 +497,7 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Sinkronisasi Bar Musik
+        // Sinkronisasi kemajuan bar musik
         function updateProgressBar() {
             if (player && typeof player.getCurrentTime === 'function') {
                 const current = player.getCurrentTime();
@@ -519,16 +525,25 @@
             }
         }
 
-        // AKSI PAS TOMBOL CLICK HERE DIKLIK - PAKSA PLAY DAN UNMUTE
+        // DOUBLE FORCE TRIGGER SAAT TOMBOL DIKLIK USER
         entryBtn.addEventListener('click', () => {
             clickScreen.classList.add('fade-out');
             loadingScreen.classList.remove('hidden');
 
+            // Trigger Pertama
             if (player && typeof player.playVideo === 'function') {
                 player.unMute(); 
                 player.setVolume(100);
                 player.playVideo();
             }
+
+            // Trigger Kedua (Mengatasi delay instansiasi di beberapa browser)
+            setTimeout(() => {
+                if (player && typeof player.playVideo === 'function') {
+                    player.unMute();
+                    player.playVideo();
+                }
+            }, 150);
 
             setTimeout(() => {
                 clickScreen.remove();
@@ -541,7 +556,7 @@
             }, 300);
         });
 
-        // Toggle Manual Card Play/Pause
+        // Kontrol Manual Card Play/Pause
         playBtn.addEventListener('click', function(e) {
             e.stopPropagation(); 
             if (player && typeof player.getPlayerState === 'function') {
@@ -554,7 +569,7 @@
             }
         });
 
-        // Fetch Lanyard Discord
+        // Fetch Lanyard Data Discord
         function getDiscordData() {
             fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
                 .then(res => res.json())
@@ -607,7 +622,7 @@
 
         setInterval(getDiscordData, 7000);
 
-        // CANVAS ANIMASI AIR & BINTIK HUJAN
+        // CANVAS ANIMASI AIR & HUJAN
         const canvas = document.getElementById('water-canvas');
         const ctx = canvas.getContext('2d');
         let particles = []; 
