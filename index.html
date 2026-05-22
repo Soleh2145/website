@@ -462,24 +462,23 @@
         const durationEl = document.getElementById("duration");
 
         // Inisialisasi Player dengan ID Video baru
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                videoId: 'RDN7ETOxQ2KTE',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': 'N7ETOxQ2KTE',
-                    'rel': 0,
-                    'mute': 0 
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-player', {
+            videoId: 'mfsgeqFSHnQ',
+            playerVars: {
+                'autoplay': 1,
+                'controls': 0,
+                'loop': 1,
+                'playlist': 'mfsgeqFSHnQ',
+                'rel': 0,
+                'mute': 0 
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
         function onPlayerReady(event) {
             console.log("Player Siap.");
             player.playVideo();
