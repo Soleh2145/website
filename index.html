@@ -461,7 +461,6 @@
         const currentTimeEl = document.getElementById("current-time");
         const durationEl = document.getElementById("duration");
 
-        // FIX AUTO-PLAY POLICY: Awalnya di-mute dulu agar diterima browser
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
                 videoId: 'mfsgeqFSHnQ',
@@ -491,7 +490,6 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Sinkronisasi Bar Musik
         function updateProgressBar() {
             if (player && typeof player.getCurrentTime === 'function') {
                 const current = player.getCurrentTime();
@@ -519,7 +517,6 @@
             }
         }
 
-        // FIX UTAMA DI SINI: Ketika klik, un-mute paksa melalui event interaksi fisik user
         entryBtn.addEventListener('click', () => {
             clickScreen.classList.add('fade-out');
             loadingScreen.classList.remove('hidden');
@@ -541,7 +538,6 @@
             }, 300);
         });
 
-        // Toggle Manual Card Play/Pause
         playBtn.addEventListener('click', function(e) {
             e.stopPropagation(); 
             if (player && typeof player.getPlayerState === 'function') {
@@ -554,7 +550,6 @@
             }
         });
 
-        // Fetch Lanyard Discord
         function getDiscordData() {
             fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
                 .then(res => res.json())
@@ -607,7 +602,6 @@
 
         setInterval(getDiscordData, 7000);
 
-        // CANVAS ANIMASI AIR & BINTIK HUJAN
         const canvas = document.getElementById('water-canvas');
         const ctx = canvas.getContext('2d');
         let particles = []; 
