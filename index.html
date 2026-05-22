@@ -28,7 +28,7 @@
             display: none !important;
         }
 
-        /* BACKGROUND HALAMAN KETIKA MASIH TOMBOL CLICK HERE */
+        /* GERBANG AWAL (CLICK HERE) */
         #click-screen {
             position: fixed;
             top: 0;
@@ -67,7 +67,7 @@
             transform: scale(1.02);
         }
 
-        /* LOADING SCREEN TRANSISI */
+        /* LOADING TRANSISI */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -100,7 +100,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* VIDEO BACKGROUND MOBIL BERJALAN */
+        /* BACKGROUND UTAMA: VIDEO MOBIL BERJALAN MALAM HARI */
         .video-container {
             position: fixed;
             top: 0;
@@ -123,11 +123,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%);
+            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
             z-index: -1;
         }
 
-        /* PROFILE WRAPPER */
+        /* PROFILE CONTENT CONTAINER */
         .profile-container {
             text-align: center;
             display: flex;
@@ -230,7 +230,7 @@
             margin-top: 2px;
         }
 
-        /* MUSIC PLAYER CARD STYLE */
+        /* CUSTOM MUSIC PLAYER UI */
         .music-player-card {
             display: flex;
             align-items: center;
@@ -331,7 +331,7 @@
             text-align: center;
         }
 
-        /* SOSMED ICONS */
+        /* MEDSOS ICONS */
         .social-icons {
             display: flex;
             gap: 22px;
@@ -365,32 +365,35 @@
             color: rgba(255, 255, 255, 0.35);
         }
 
-        /* EFEK CACING PARTIKEL CSS (0% LAG - RINGAN BANGET) */
-        .worm-particle {
+        /* ========================================================
+           EFEK RINTIK HUJAN CSS (100% RINGAN - TIDAK BIKIN LAG)
+           ======================================================== */
+        .rain-container {
             position: fixed;
-            width: 8px;
-            height: 8px;
-            background: #00bfff;
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            z-index: 2;
-            box-shadow: 0 0 10px #00bfff, 0 0 20px #0055ff;
-            animation: moveWorm 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            z-index: -1; /* Di depan video background, di belakang profil */
+            overflow: hidden;
         }
 
-        @keyframes moveWorm {
+        .drop {
+            position: absolute;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.35));
+            width: 1px; /* Rintik air tipis jernih */
+            height: 70px;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
             0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 1;
-            }
-            50% {
-                /* Membuat rute meliuk seperti cacing */
-                transform: translate(var(--x1), var(--y1)) scale(0.8);
-                opacity: 0.8;
+                transform: translateY(-100px);
             }
             100% {
-                transform: translate(var(--x2), var(--y2)) scale(0);
-                opacity: 0;
+                transform: translateY(100vh);
             }
         }
     </style>
@@ -406,6 +409,8 @@
     </div>
 
     <audio id="audio-player" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+
+    <div class="rain-container" id="rain-box"></div>
 
     <div class="video-container">
         <video id="bg-video" loop muted playsinline>
@@ -470,7 +475,7 @@
         const discordId = "439281048593920102";
         let isPlaying = false;
 
-        // Visitor Counter
+        // Visitor Counter Engine
         let views = localStorage.getItem('site_views');
         if (views === null) { views = 161; } else { views = parseInt(views) + 1; }
         localStorage.setItem('site_views', views);
@@ -495,7 +500,7 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Sinkronisasi Progress Bar Audio
+        // Sinkronisasi Bar Musik asli
         audio.addEventListener('timeupdate', () => {
             const current = audio.currentTime;
             const total = audio.duration;
@@ -528,24 +533,24 @@
             }
         }
 
-        // TRIGGER SAAT KLIK MASUK UTAMA
+        // EVENT KLIK MASUK UTAMA (Pemicu Audio & Video Berputar)
         entryBtn.addEventListener('click', () => {
             clickScreen.classList.add('fade-out');
             loadingScreen.classList.remove('hidden');
 
-            // Putar audio & video background barengan
             audio.volume = 1.0;
             audio.play().then(() => {
                 isPlaying = true;
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 cdIcon.classList.add('fa-spin');
-            }).catch(err => console.log("Audio failed"));
+            }).catch(err => console.log("Audio play blocked"));
 
-            bgVideo.play().catch(err => console.log("Video failed"));
+            bgVideo.play().catch(err => console.log("Video play blocked"));
 
             setTimeout(() => {
                 clickScreen.remove();
                 getDiscordData();
+                makeItRain(); // Buat partikel hujan otomatis aktif
                 
                 setTimeout(() => {
                     closeLoading();
@@ -559,7 +564,7 @@
             togglePlay();
         });
 
-        // Fetch Lanyard Discord Data
+        // Fetch Lanyard Data Discord Profile
         function getDiscordData() {
             fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
                 .then(res => res.json())
@@ -611,58 +616,29 @@
         }
         setInterval(getDiscordData, 7000);
 
+        // =========================================================
+        // GENERATOR RINTIK HUJAN (SANGAT RINGAN & AMAN DARI LAG)
+        // =========================================================
+        function makeItRain() {
+            const rainBox = document.getElementById('rain-box');
+            const dropCount = 60; // Jumlah rintik hujan seimbang agar estetik dan super enteng
 
-        // ========================================================
-        //  EFEK CACING NEON INTERAKTIF BISA DIPENCET (ANTI LAG)
-        // ========================================================
-        function createWorm(e) {
-            // Abaikan klik jika mengenai area tombol interaktif
-            if (e.target.closest('.music-player-card') || e.target.closest('.sub-profile-box') || e.target.closest('.social-icons') || e.target.closest('#entry-btn')) return;
-
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-            if (!clientX || !clientY) return;
-
-            // Generate beberapa ruas partikel beruntun membentuk badan cacing
-            for (let i = 0; i < 6; i++) {
-                setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.classList.add('worm-particle');
-                    
-                    // Posisi spawn awal tepat di titik jari pencet/klik
-                    particle.style.left = clientX + 'px';
-                    particle.style.top = clientY + 'px';
-
-                    // Berikan rute liukan acak zigzag cacing lewat CSS Variables
-                    const x1 = (Math.random() - 0.5) * 120 + 'px';
-                    const y1 = (Math.random() - 0.5) * 120 + 'px';
-                    const x2 = (Math.random() - 0.5) * 240 + 'px';
-                    const y2 = (Math.random() - 0.5) * 240 + 'px';
-
-                    particle.style.setProperty('--x1', x1);
-                    particle.style.setProperty('--y1', y1);
-                    particle.style.setProperty('--x2', x2);
-                    particle.style.setProperty('--y2', y2);
-
-                    // Variasi spektrum warna neon agar estetik
-                    const hue = Math.random() * 40 + 190;
-                    particle.style.background = `hsl(${hue}, 100%, 60%)`;
-                    particle.style.boxShadow = `0 0 10px hsl(${hue}, 100%, 60%), 0 0 20px hsl(${hue}, 100%, 40%)`;
-
-                    document.body.appendChild(particle);
-
-                    // Hapus otomatis dari DOM setelah animasi selesai biar RAM bersih
-                    setTimeout(() => {
-                        particle.remove();
-                    }, 1200);
-                }, i * 45); // Delay antar segmen badan cacing agar meliuk rapi
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('drop');
+                
+                // Distribusi rintik hujan secara acak di lebar layar
+                drop.style.left = Math.random() * 100 + 'vw';
+                
+                // Kecepatan jatuh acak berkisar 0.6s sampai 1.2s agar terlihat natural
+                drop.style.animationDuration = (Math.random() * 0.6 + 0.6) + 's';
+                
+                // Delay acak agar rintik hujan turun bergantian tidak barengan
+                drop.style.animationDelay = (Math.random() * 2) + 's';
+                
+                rainBox.appendChild(drop);
             }
         }
-
-        // Jalankan efek saat di-klik (PC) ataupun di-pencet (Android/iOS)
-        window.addEventListener('mousedown', createWorm);
-        window.addEventListener('touchstart', createWorm);
     </script>
 </body>
 </html>
