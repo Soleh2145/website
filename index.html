@@ -233,7 +233,7 @@
             margin-top: 2px;
         }
 
-        /* MUSIC PLAYER CARD STYLE */
+        /* MUSIC PLAYER CARD STYLE (SESUAI GAMBAR) */
         .music-player-card {
             display: flex;
             align-items: center;
@@ -409,7 +409,7 @@
                 <i class="fas fa-music"></i>
             </div>
             <div class="mp-details">
-                <div class="mp-title">Bruno Mars - When I Was Your Man</div>
+                <div class="mp-title">Wiz Khalifa - See You Again</div>
                 <div class="mp-progress-wrapper">
                     <span id="current-time">0:00</span>
                     <div class="mp-progress-bar">
@@ -461,15 +461,15 @@
         const currentTimeEl = document.getElementById("current-time");
         const durationEl = document.getElementById("duration");
 
-        // FIX: Inisialisasi Player Menggunakan ID Video Bruno Mars yang benar
+        // Inisialisasi Player dengan ID Video baru
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                videoId: 'n7ETOxQ2KTE', // Menggunakan ID asli video 'When I Was Your Man'
+                videoId: 'RDN7ETOxQ2KTE',
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': 'n7ETOxQ2KTE',
+                    'playlist': 'N7ETOxQ2KTE',
                     'rel': 0,
                     'mute': 0 
                 },
@@ -482,7 +482,7 @@
 
         function onPlayerReady(event) {
             console.log("Player Siap.");
-            // Tidak langsung play di sini agar mematuhi aturan browser sebelum di-klik user
+            player.playVideo();
         }
 
         function formatTime(time) {
